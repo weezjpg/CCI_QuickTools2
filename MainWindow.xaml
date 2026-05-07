@@ -1,0 +1,722 @@
+<fw:AcrylicWindow x:Class="CCI_QuickTools2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:CCI_QuickTools2.ViewModels"
+        xmlns:views="clr-namespace:CCI_QuickTools2.Views"
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+        mc:Ignorable="d"
+        fw:AcrylicWindow.Enabled="True"
+        Title="{Binding Title}" Height="900" Width="1400"
+        MinHeight="750" MinWidth="1200"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        AcrylicWindowStyle="None"                  
+        TintColor="#0C0C0E"
+        TintOpacity="0.94"
+        NoiseOpacity="0.03"
+        
+        FallbackColor="#0C0C0E"
+        Background="Transparent"
+        Foreground="White">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}">
+            <views:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AdToolsViewModel}">
+            <views:AdToolsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AdExplorerViewModel}">
+            <views:AdExplorerView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AdAlertsViewModel}">
+            <views:AdAlertsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:RemotePromptViewModel}">
+            <views:RemotePromptView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:OutlookViewModel}">
+            <views:OutlookView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:NetworkViewModel}">
+            <views:NetworkView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:DiagnosticsViewModel}">
+            <views:DiagnosticsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SystemToolsViewModel}">
+            <views:SystemToolsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:UserMigrationViewModel}">
+            <views:UserMigrationView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AboutViewModel}">
+            <views:AboutView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:PluginsViewModel}">
+            <views:PluginsView />
+        </DataTemplate>
+
+        <!-- WINDOW CONTROLS STYLE -->
+        <Style x:Key="WindowControlButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1AFFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#10FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowControlButtonStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#C42B1C"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#9E2317"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="42" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="28" />
+        </Grid.RowDefinitions>
+
+        <!-- APP TOPBAR -->
+        <Border Grid.Row="0" x:Name="AppTopbar" MouseLeftButtonDown="AppTopbar_MouseLeftButtonDown" 
+                Background="#06000000" BorderBrush="{StaticResource SeparatorBrush}" BorderThickness="0,0,0,1">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                    <!-- Branding: Digital-inspired icon -->
+                    <Border Width="24" Height="24" CornerRadius="6" Margin="0,0,8,0">
+                        <TextBlock Text="&#xE7EF;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                    
+                    <TextBlock Text="CCI" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" Opacity="1"/>
+                    <TextBlock Text="QuickTools 2" Margin="4,0,0,0" FontSize="13" FontWeight="Normal" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+
+                <!-- CENTER SEARCH BAR (Command Palette Style) -->
+                <Grid x:Name="SearchContainer" HorizontalAlignment="Center" VerticalAlignment="Center" Width="480">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <Border x:Name="SearchBackground" Background="{StaticResource GlassBackgroundBrush}" BorderBrush="{StaticResource GlassBorderBrush}" BorderThickness="1" CornerRadius="8" Height="30">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchBox}" Value="True">
+                                        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                        <Setter Property="Background" Value="{StaticResource FrostedGlassBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Search Icon -->
+                            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#40FFFFFF" FontSize="12"/>
+                            
+                            <TextBox x:Name="SearchBox" Grid.Column="1" Background="Transparent" BorderThickness="0" Foreground="White" 
+                                     VerticalContentAlignment="Center" Padding="4,0,10,0" FontSize="12" 
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                     CaretBrush="White" PreviewKeyDown="SearchBox_PreviewKeyDown"
+                                     GotFocus="SearchBox_GotFocus">
+                                <TextBox.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="0"/>
+                                    </Style>
+                                </TextBox.Resources>
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Esc" Command="{Binding SelectSearchResultCommand}" CommandParameter="{x:Null}" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+
+                            <!-- Placeholder -->
+                            <TextBlock Grid.Column="1" Text="Pesquisar..." 
+                                       IsHitTestVisible="False" VerticalAlignment="Center" Foreground="#30FFFFFF" FontSize="12" Margin="5,0,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Shortcut hint -->
+                            <Border Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" 
+                                    Background="#0AFFFFFF" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="4" Padding="4,2">
+                                <TextBlock Text="Ctrl + Espaço" FontSize="9" Foreground="#40FFFFFF" FontWeight="Bold"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                            <!-- STATUS OVERLAY (When executing) -->
+                            <Border Grid.ColumnSpan="3" Background="#F01E1E20" CornerRadius="8" Visibility="Collapsed">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsExecutingQuickAction}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid>
+                                    <TextBlock Text="{Binding SearchStatusMessage}" Foreground="{StaticResource AccentBrush}" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                                </Grid>
+                            </Border>
+                    
+                    <!-- PROGRESS INDICATOR (Under search box) -->
+                    <ProgressBar Grid.Row="1" Height="3" IsIndeterminate="True" Background="Transparent" Foreground="{StaticResource AccentBrush}" Margin="8,0" BorderThickness="0">
+                        <ProgressBar.Style>
+                            <Style TargetType="ProgressBar">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExecutingQuickAction}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ProgressBar.Style>
+                    </ProgressBar>
+
+                    <!-- SEARCH RESULTS POPUP (SPOTLIGHT STYLE) -->
+                    <Popup IsOpen="{Binding IsSearchOpen}" PlacementTarget="{Binding ElementName=SearchBackground}" 
+                           Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False">
+                        <Border Width="500" Background="#F21E1E20" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="12" Margin="0,8,0,0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="30" ShadowDepth="10" Opacity="0.4" Color="Black"/>
+                            </Border.Effect>
+                            <Grid>
+                                <ListView x:Name="ResultsList" BorderThickness="0" Background="Transparent" MaxHeight="600" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListView.Resources>
+                                        <CollectionViewSource x:Key="GroupedResults" Source="{Binding SearchResults}">
+                                            <CollectionViewSource.GroupDescriptions>
+                                                <PropertyGroupDescription PropertyName="Category" />
+                                            </CollectionViewSource.GroupDescriptions>
+                                        </CollectionViewSource>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListViewItem">
+                                                        <Border x:Name="ItemBorder" Background="Transparent" CornerRadius="8" Margin="8,2" Padding="8">
+                                                            <ContentPresenter />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="ItemBorder" Property="Background" Value="#1AFFFFFF"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsSelected" Value="True">
+                                                                <Setter TargetName="ItemBorder" Property="Background" Value="#2AFFFFFF"/>
+                                                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                                                <Setter TargetName="ItemBorder" Property="BorderThickness" Value="1"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.Resources>
+                                    <ListView.ItemsSource>
+                                        <Binding Source="{StaticResource GroupedResults}" />
+                                    </ListView.ItemsSource>
+                                    <ListView.GroupStyle>
+                                        <GroupStyle>
+                                            <GroupStyle.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#05FFFFFF" Padding="15,8,15,4">
+                                                        <TextBlock Text="{Binding Name, Converter={StaticResource CaseConverter}}" Foreground="{StaticResource AccentBrush}" FontWeight="ExtraBold" FontSize="10" Opacity="0.8" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GroupStyle.HeaderTemplate>
+                                        </GroupStyle>
+                                    </ListView.GroupStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="40" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <Border Width="30" Height="30" Background="#0DFFFFFF" CornerRadius="6" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets" FontSize="16" 
+                                                               VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                                               Foreground="White" Opacity="0.9"/>
+                                                </Border>
+                                                
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" FontSize="13" />
+                                                    <TextBlock Text="{Binding Description}" Foreground="#60FFFFFF" FontSize="10.5" TextWrapping="Wrap" MaxHeight="32" FontFamily="Consolas"/>
+                                                </StackPanel>
+
+                                                <TextBlock Grid.Column="2" Text="ENTRAR" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" 
+                                                           FontSize="9" FontWeight="Bold" Opacity="0" x:Name="HintText" Margin="0,0,8,0"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ListViewItem}}" Value="True">
+                                                    <Setter TargetName="HintText" Property="Opacity" Value="1" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                    <ListView.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding SelectSearchResultCommand}" CommandParameter="{Binding SelectedItem, ElementName=ResultsList}" />
+                                    </ListView.InputBindings>
+                                </ListView>
+
+                                <!-- Shortcut Footer -->
+                                <Border Grid.Row="1" Background="#0D000000" Padding="12,8" BorderThickness="0,1,0,0" BorderBrush="#1AFFFFFF" Visibility="Collapsed">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="SETAS p/ navegar • ENTER p/ detalhes • CTRL+ENTER p/ explorer" FontSize="9" Foreground="#40FFFFFF"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="&#xE921;" Style="{StaticResource WindowControlButtonStyle}" Click="MinimizeButton_Click"/>
+                    <Button x:Name="BtnMaximize" Content="&#xE922;" Style="{StaticResource WindowControlButtonStyle}" Click="MaximizeButton_Click"/>
+                    <Button Content="&#xE8BB;" Style="{StaticResource CloseButtonStyle}" Click="CloseButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#1A000000" BorderThickness="0,0,1,0" BorderBrush="#1AFFFFFF">
+                <Grid Margin="20,10,20,30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,18">
+                        <Image Source="pack://application:,,,/Resources/Images/exercitologo.png" Width="150" Height="80" Margin="0,20,0,10" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="PAINEL DE CONTROLO" Style="{StaticResource LabelTextBlockStyle}" />
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToDashboardCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='DashboardViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Resumo Geral" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToManutencaoCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='DiagnosticsViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Diagnóstico de Computador" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <TextBlock Text="ACTIVE DIRECTORY" Style="{StaticResource LabelTextBlockStyle}" />
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToConsultasADCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='AdToolsViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE81D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Consultas de Objetos" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToNavegadorADCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='AdExplorerViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Navegador de AD" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToAlertasADCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='AdAlertsViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Alertas de AD" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToRemotePromptCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='RemotePromptViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE756;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Remote Prompt" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <TextBlock Text="SUPORTE OPERACIONAL" Style="{StaticResource LabelTextBlockStyle}" />
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToOutlookCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='OutlookViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE715;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Ferramentas Outlook" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToRedeCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='NetworkViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE839;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Gestão de Redes" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <TextBlock Text="FERRAMENTAS" Style="{StaticResource LabelTextBlockStyle}" />
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToFerramentasCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='SystemToolsViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE90F;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Sistema e Controladores" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToMigracaoCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='UserMigrationViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Backup de Perfil" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <TextBlock Text="EXTENSÕES" Style="{StaticResource LabelTextBlockStyle}" />
+                            <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToPluginsCommand}" 
+                                         IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='PluginsViewModel'}">
+                                <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                    <TextBlock Text="&#xE74C;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                    <TextBlock Text="Plugins e Scripts" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2">
+                        <Border Height="1" Background="#1AFFFFFF" Margin="0,0,0,24" />
+                        <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToSobreCommand}" 
+                                     IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='AboutViewModel'}">
+                            <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                <TextBlock Text="Sobre a Aplicação" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource NavButtonStyle}" Command="{Binding NavigateToDefinicoesCommand}" 
+                                     IsChecked="{Binding CurrentView, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter='SettingsViewModel'}">
+                            <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+                                <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,12,0" VerticalAlignment="Center" FontSize="14" Opacity="0.7"/>
+                                <TextBlock Text="Configurações" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Background="Transparent">
+                <ContentControl Content="{Binding CurrentView, NotifyOnTargetUpdated=True}" Style="{DynamicResource TransitioningContent}"/>
+            </Border>
+        </Grid>
+
+        <!-- FOOTER (Always Visible) -->
+        <Border Grid.Row="2"
+        Background="#0CFFFFFF"
+        BorderBrush="#1AFFFFFF"
+        BorderThickness="0,1,0,0">
+
+            <Grid Margin="15,0">
+
+                <!-- Desenvolvido por -->
+                <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center">
+
+                    <TextBlock Text="Desenvolvido por:"
+                       Foreground="#80FFFFFF"
+                       FontSize="11"
+                       VerticalAlignment="Center"/>
+
+                    <TextBlock Text=" 1Cb Pedro Rocha"
+                       Foreground="White"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="5,0,0,0"/>
+
+                    <TextBlock Text=" 05802319"
+                       Foreground="#80FFFFFF"
+                       FontSize="10"
+                       VerticalAlignment="Center"
+                       Margin="3,0,0,0"/>
+
+                    <TextBlock Text=" e "
+                       Foreground="#80FFFFFF"
+                       FontSize="11"
+                       VerticalAlignment="Center"
+                       Margin="6,0,0,0"/>
+
+                    <TextBlock Text="2Cb Tiago Pereira"
+                       Foreground="White"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="3,0,0,0"/>
+
+                    <TextBlock Text=" 14363311"
+                       Foreground="#80FFFFFF"
+                       FontSize="10"
+                       VerticalAlignment="Center"
+                       Margin="3,0,0,0"/>
+                </StackPanel>
+
+                <!-- CCI -->
+                <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+
+                    <TextBlock Text="CENTRO DE COMUNICAÇÕES E INFORMAÇÃO"
+                       Foreground="#40FFFFFF"
+                       FontSize="9"
+                       FontWeight="Bold"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+        <!-- INFO SIDECARD GLOBAL (AD Search Results) -->
+        <Border Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="450" 
+                Background="{StaticResource AcrylicBrush}" BorderBrush="{StaticResource SeparatorBrush}" BorderThickness="1,0,0,0"
+                Visibility="{Binding SelectedAdObject, Converter={StaticResource NullToVisibilityConverter}}"
+                Panel.ZIndex="5000">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Padding="24" Background="{StaticResource GlassBackgroundBrush}" BorderThickness="0,0,0,1" BorderBrush="{StaticResource SeparatorBrush}">
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="{Binding SelectedAdObject.Type, Converter={StaticResource CaseConverter}}" Foreground="{StaticResource AccentBrush}" FontSize="10" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding SelectedAdObject.DisplayName}" Foreground="White" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding SelectedAdObject.SAMAccountName}" Foreground="#606060" FontSize="12" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding CloseGlobalSidecardCommand}" Style="{StaticResource GhostButtonStyle}" Content="✕" Width="36" Height="36"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="24">
+                        
+                        <!-- PC DIAGNOSTICS -->
+                        <StackPanel Visibility="{Binding SelectedAdObject.Type, Converter={StaticResource EqualityConverter}, ConverterParameter='computer'}">
+                            <TextBlock Text="DIAGNÓSTICO RÁPIDO" Style="{StaticResource LabelTextBlockStyle}" Margin="0,0,0,12" Foreground="#3fb344" />
+                            <Border Background="#103fb344" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,8">
+                                        <TextBlock Text="Conetividade (Ping)" Foreground="White" Opacity="0.6" FontSize="11" />
+                                        <TextBlock Text="{Binding SelectedAdObject.Reachability}" Foreground="White" HorizontalAlignment="Right" FontWeight="Bold" FontSize="11" />
+                                    </Grid>
+                                    <Grid Margin="0,0,0,8">
+                                        <TextBlock Text="DNS Resolução" Foreground="White" Opacity="0.6" FontSize="11" />
+                                        <TextBlock Text="{Binding SelectedAdObject.DnsStatus}" Foreground="White" HorizontalAlignment="Right" FontSize="11" />
+                                    </Grid>
+                                    <Grid Margin="0,0,0,8">
+                                        <TextBlock Text="RPC / SMB (Portas)" Foreground="White" Opacity="0.6" FontSize="11" />
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <TextBlock Text="{Binding SelectedAdObject.RpcStatus}" Foreground="White" FontSize="11" Margin="0,0,8,0" />
+                                            <TextBlock Text="{Binding SelectedAdObject.SmbStatus}" Foreground="White" FontSize="11" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid>
+                                        <TextBlock Text="Interface WMI" Foreground="White" Opacity="0.6" FontSize="11" />
+                                        <TextBlock Text="{Binding SelectedAdObject.WmiStatus}" Foreground="White" HorizontalAlignment="Right" FontSize="11" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="AÇÕES DE GESTÃO" Style="{StaticResource LabelTextBlockStyle}" Margin="0,8,0,12" Foreground="#f59f00" />
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Content="Limpar SCCM" Command="{Binding ClearSccmCacheCommand}" CommandParameter="{Binding SelectedAdObject}" Style="{StaticResource GhostButtonStyle}" BorderBrush="#1AFFFFFF" Margin="0,0,4,0" />
+                                <Button Grid.Column="1" Content="Serviços" Command="{Binding RestartCriticalServicesCommand}" CommandParameter="{Binding SelectedAdObject}" Style="{StaticResource GhostButtonStyle}" BorderBrush="#1AFFFFFF" Margin="4,0,0,0" />
+                            </Grid>
+                            
+                            <TextBlock Text="ULTIMOS LOGONS" Style="{StaticResource LabelTextBlockStyle}" Margin="0,8,0,12" />
+                            <ItemsControl ItemsSource="{Binding SelectedAdObject.LoggedUsers}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Foreground="White" Opacity="0.6" Margin="0,2" FontSize="11"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- USER/SMX GROUPS -->
+                        <StackPanel Visibility="{Binding SelectedAdObject.Type, Converter={StaticResource EqualityConverter}, ConverterParameter='user'}">
+                            <TextBlock Text="PERMISSÕES E GRUPOS" Style="{StaticResource LabelTextBlockStyle}" Margin="0,0,0,12" />
+                            <ItemsControl ItemsSource="{Binding SelectedAdObject.Details}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Foreground="White" Opacity="0.6" Margin="0,2" FontSize="11"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <Border Height="1" Background="#1AFFFFFF" Margin="0,24" />
+                        
+                        <TextBlock Text="CAMINHO AD (DN)" Style="{StaticResource LabelTextBlockStyle}" Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding SelectedAdObject.DistinguishedName}" Foreground="#40FFFFFF" FontSize="9" TextWrapping="Wrap" FontFamily="Consolas" />
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" Padding="20" Background="#0DFFFFFF" BorderThickness="0,1,0,0" BorderBrush="#1AFFFFFF">
+                    <Button Content="ABRIR NO EXPLORADOR DE DIRETÓRIO" Command="{Binding OpenInExplorerCommand}" CommandParameter="{Binding SelectedAdObject}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Height="40" FontSize="11" FontWeight="Bold"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- TOAST NOTIFICATION (GLOBAL OVERLAY) -->
+        <Canvas Grid.RowSpan="3" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="False" Panel.ZIndex="10000">
+            <Border Canvas.Right="20" Canvas.Top="60" 
+                    Width="340" 
+                    CornerRadius="8" 
+                    BorderThickness="1" 
+                    Background="#FF1D1D20" 
+                    BorderBrush="#2A2A2E"
+                    x:Name="ToastBorder">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsToastVisible}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="25" ShadowDepth="8" Opacity="0.5" Color="Black"/>
+                </Border.Effect>
+
+                <Grid>
+                    <Border Width="4" HorizontalAlignment="Left" CornerRadius="4,0,0,4">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsToastSuccess}" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource SuccessBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsToastSuccess}" Value="False">
+                                        <Setter Property="Background" Value="{StaticResource ErrorBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+
+                    <Grid Margin="16,12,12,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock FontFamily="Segoe MDL2 Assets" 
+                           FontSize="18" 
+                           VerticalAlignment="Top" 
+                           HorizontalAlignment="Center"
+                           Margin="0,12,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsToastSuccess}" Value="True">
+                                            <Setter Property="Text" Value="&#xEC61;" />
+                                            <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsToastSuccess}" Value="False">
+                                            <Setter Property="Text" Value="&#xEA39;" />
+                                            <Setter Property="Foreground" Value="{StaticResource ErrorBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                            <TextBlock FontWeight="Bold" Foreground="White" FontSize="14">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsToastSuccess}" Value="True">
+                                                <Setter Property="Text" Value="Sucesso" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsToastSuccess}" Value="False">
+                                                <Setter Property="Text" Value="Erro de Operação" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <TextBlock Text="{Binding ToastMessage}" 
+                               Foreground="#A0A0A2" 
+                               FontSize="12" 
+                               TextWrapping="Wrap" 
+                               Margin="0,4,0,0"
+                               LineHeight="16"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Canvas>
+
+    </Grid>
+</fw:AcrylicWindow>
